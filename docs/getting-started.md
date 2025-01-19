@@ -1,4 +1,3 @@
-# docs/getting-started.md
 # Getting Started with ATF
 
 ## Overview
@@ -10,119 +9,223 @@ The Algorithmic Transparency Feed (ATF) format is designed to help organizations
 ```bash
 git clone https://github.com/yourusername/atf.git
 cd atf
-pip install -r validator/requirements.txt
+pip install -r requirements.txt
 ```
 
-2. **Creating Your First ATF Feed**
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<atf xmlns="https://www.algorithmictransparency.gov/atf" version="1.0">
-  <!-- Add your feed content here -->
-</atf>
+2. **Basic Feed Generation**
+```python
+from tools.feed_generator.generator import ATFGenerator
+
+generator = ATFGenerator()
+feed = generator.create_feed(
+    title="My First ATF Feed",
+    link="https://example.com/atf",
+    description="Example ATF feed"
+)
 ```
 
-3. **Validating Your Feed**
+3. **Validate Your Feed**
 ```bash
 python validator/validator.py your_feed.xml
+```
+
+## Security Setup
+
+1. **Initialize Security Configuration**
+```bash
+# Copy default security config
+cp security/config.yaml.example security/config.yaml
+
+# Generate keys
+python security/generate_keys.py
+```
+
+2. **Configure Access Control**
+```yaml
+# In security/config.yaml
+access_control:
+  jwt:
+    issuer: "your-domain"
+    audience: "your-service"
+```
+
+3. **Enable Rate Limiting**
+```yaml
+rate_limiting:
+  default:
+    rate: 100
+    burst: 20
+```
+
+## Deployment
+
+1. **Local Development**
+```bash
+docker-compose up
+```
+
+2. **Production Deployment**
+```bash
+# Deploy to Kubernetes
+./deployment/scripts/deploy.sh v1.0.0
+
+# Verify deployment
+kubectl get pods -n atf-service
+```
+
+## Monitoring Setup
+
+1. **Configure Prometheus**
+```bash
+kubectl apply -f monitoring/prometheus/
+```
+
+2. **Import Grafana Dashboard**
+```bash
+# Import dashboard
+curl -X POST http://grafana:3000/api/dashboards/db \
+  -H "Content-Type: application/json" \
+  -d @monitoring/grafana/dashboards/atf-service.json
+```
+
+## Feed Management
+
+1. **Archive Feeds**
+```python
+from tools.feed_manager.manager import FeedManager
+
+manager = FeedManager("workspace/")
+manager.archive_feed("feed.xml", "1.0.0")
+```
+
+2. **Compare Feeds**
+```python
+diff = manager.compare_feeds("old_feed.xml", "new_feed.xml")
+print(f"Changes: {diff.added_items}, {diff.removed_items}")
+```
+
+3. **Generate Impact Assessment**
+```python
+assessment = manager.create_impact_assessment(
+    "ranking_change",
+    {"algorithm": "search", "aspect": "relevance"}
+)
 ```
 
 ## Best Practices
 
 1. **Regular Updates**
-   - Update your feed at least monthly
-   - Include all significant algorithmic changes
-   - Maintain historical entries
+- Update your feed at least monthly
+- Include all significant algorithmic changes
+- Maintain historical entries
+- Sign all feed updates
 
-2. **Clear Descriptions**
-   - Use plain language
-   - Include specific metrics
-   - Detail impact assessments
+2. **Security**
+- Use HTTPS for feed delivery
+- Implement rate limiting
+- Enable monitoring
+- Regular security audits
+- Key rotation
 
-3. **Accessibility**
-   - Host feed on a public URL
-   - Provide stable, permanent links
-   - Include proper documentation
+3. **Monitoring**
+- Track feed access patterns
+- Monitor validation errors
+- Set up alerts
+- Regular performance checks
 
----
+4. **Documentation**
+- Maintain clear change logs
+- Document impact assessments
+- Keep security documentation current
+- Update deployment guides
 
-# docs/specification.md
-# ATF Technical Specification
-
-## 1. Format Overview
-
-The Algorithmic Transparency Feed (ATF) is an XML-based format designed for publishing algorithmic transparency data. It follows similar principles to RSS while adding specific elements for algorithmic transparency.
-
-### 1.1 Namespace
-
-The ATF namespace is: `https://www.algorithmictransparency.gov/atf`
-
-### 1.2 Version
-
-Current version: 1.0
-
-## 2. Elements
-
-### 2.1 Required Elements
-
-#### Channel
-- `<title>`: Feed title
-- `<link>`: Feed URL
-- `<description>`: Feed description
-- `<lastBuildDate>`: Last update timestamp
-- `<language>`: Feed language
-
-#### Items
-- `<title>`: Update title
-- `<link>`: Update URL
-- `<pubDate>`: Publication date
-- `<categories>`: Category list
-- `<description>`: Update description
-- `<impactAssessment>`: Impact details
-
-### 2.2 Optional Elements
-
-#### Impact Assessment
-- `<metrics>`: Quantitative metrics
-- `<affectedUsers>`: User impact percentage
-
-## 3. Data Types
-
-- Dates: ISO 8601 format
-- URLs: Valid HTTP(S) URLs
-- Percentages: Numeric values with % symbol
-
-## 4. Validation
-
-See `validator/validator.py` for implementation details.
-
----
-
-# docs/examples.md
-# ATF Examples
-
-## Basic Feed Example
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<atf xmlns="https://www.algorithmictransparency.gov/atf" version="1.0">
-  <channel>
-    <title>Example Corp ATF</title>
-    <link>https://example.com/atf</link>
-    <description>Algorithm updates for Example Corp</description>
-    <lastBuildDate>2025-01-19T10:00:00Z</lastBuildDate>
-    <language>en-us</language>
-  </channel>
-  <item>
-    <!-- Example item content -->
-  </item>
-</atf>
+## Directory Structure
+```
+atf/
+├── api/                 # API implementation
+├── deployment/          # Deployment configurations
+│   ├── k8s/            # Kubernetes manifests
+│   └── scripts/        # Deployment scripts
+├── docs/               # Documentation
+├── monitoring/         # Monitoring configurations
+│   ├── prometheus/     # Prometheus config
+│   └── grafana/        # Grafana dashboards
+├── security/           # Security configurations
+└── tools/              # ATF tools
+    ├── feed-generator/ # Feed generation
+    ├── feed-manager/   # Feed management
+    ├── feed-reader/    # Feed parsing
+    └── validator/      # Feed validation
 ```
 
-## Common Use Cases
+## Common Tasks
 
-1. **Ranking Algorithm Updates**
-2. **Content Moderation Changes**
-3. **Recommendation System Updates**
-4. **User Classification Changes**
+1. **Creating a New Feed**
+```bash
+# Generate feed
+python tools/feed-generator/generator.py --config config.json --output feed.xml
 
-See `examples/` directory for more detailed examples.
+# Validate feed
+python tools/validator/validator.py feed.xml
+
+# Sign feed
+python security/sign_feed.py feed.xml
+```
+
+2. **Updating Existing Feed**
+```python
+manager = FeedManager("workspace/")
+manager.automate_update("feed.xml", updates, "1.0.1")
+```
+
+3. **Monitoring Feed Health**
+```bash
+# Check feed metrics
+curl http://localhost:8000/metrics
+
+# View dashboard
+open http://localhost:3000/d/atf-service
+```
+
+## Troubleshooting
+
+1. **Validation Errors**
+```bash
+# Detailed validation
+python validator/validator.py --verbose feed.xml
+
+# Check schema
+xmllint --schema schema/atf-1.0.xsd feed.xml
+```
+
+2. **Deployment Issues**
+```bash
+# Check pods
+kubectl describe pods -n atf-service
+
+# View logs
+kubectl logs -f deployment/atf-service -n atf-service
+```
+
+3. **Security Issues**
+```bash
+# Check security headers
+curl -I https://your-service/feed
+
+# Test rate limiting
+./scripts/test-rate-limit.sh
+```
+
+## Getting Help
+
+- Documentation: Check the `docs/` directory
+- Issues: Submit via GitHub
+- Security: Contact security@yourdomain.com
+- Community: Join our Slack channel
+
+## Next Steps
+
+1. Customize feed templates
+2. Set up monitoring
+3. Configure security
+4. Plan regular updates
