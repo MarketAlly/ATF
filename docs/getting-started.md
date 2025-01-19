@@ -221,7 +221,7 @@ curl -I https://your-service/feed
 - Documentation: Check the `docs/` directory
 - Issues: Submit via GitHub
 - Security: Contact security@marketally.com
-- Community: Join our Slack channel
+- Community: Catch me on Bluesky @davidhfriedeljr.bsky.social
 
 ## Next Steps
 
