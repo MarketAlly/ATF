@@ -1,0 +1,241 @@
+{
+    "templates": {
+      "algorithm_update": {
+        "name": "Algorithm Update Impact Assessment",
+        "fields": {
+          "algorithm_name": {
+            "type": "string",
+            "description": "Name of the algorithm being updated",
+            "required": true
+          },
+          "change_type": {
+            "type": "string",
+            "enum": ["major", "minor", "patch"],
+            "description": "Type of change being made",
+            "required": true
+          },
+          "impact_areas": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Areas affected by the change",
+            "required": true
+          },
+          "affected_users_percentage": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Percentage of users affected",
+            "required": true
+          }
+        },
+        "metrics": {
+          "accuracy": {
+            "type": "percentage",
+            "description": "Change in accuracy"
+          },
+          "latency": {
+            "type": "duration",
+            "description": "Change in processing time"
+          },
+          "fairness_score": {
+            "type": "percentage",
+            "description": "Change in fairness metrics"
+          }
+        },
+        "risks": [
+          "Service disruption during deployment",
+          "Unexpected behavior in edge cases",
+          "Performance impact",
+          "User adaptation period"
+        ],
+        "mitigations": [
+          "Phased rollout",
+          "A/B testing",
+          "Monitoring and alerts",
+          "Rollback plan",
+          "User communication"
+        ]
+      },
+      "privacy_enhancement": {
+        "name": "Privacy Enhancement Impact Assessment",
+        "fields": {
+          "feature_name": {
+            "type": "string",
+            "description": "Name of the privacy feature",
+            "required": true
+          },
+          "protection_level": {
+            "type": "string",
+            "enum": ["basic", "enhanced", "maximum"],
+            "description": "Level of privacy protection",
+            "required": true
+          },
+          "data_types": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Types of data being protected",
+            "required": true
+          }
+        },
+        "metrics": {
+          "privacy_score": {
+            "type": "epsilon",
+            "description": "Differential privacy guarantee"
+          },
+          "performance_impact": {
+            "type": "percentage",
+            "description": "Impact on system performance"
+          },
+          "data_utility": {
+            "type": "percentage",
+            "description": "Remaining data utility"
+          }
+        },
+        "risks": [
+          "Reduced system performance",
+          "Changes to data access patterns",
+          "Integration challenges",
+          "User workflow changes"
+        ],
+        "mitigations": [
+          "Performance optimization",
+          "Clear documentation",
+          "User training",
+          "Gradual rollout",
+          "Monitoring system"
+        ]
+      },
+      "content_moderation": {
+        "name": "Content Moderation Impact Assessment",
+        "fields": {
+          "moderation_type": {
+            "type": "string",
+            "enum": ["automated", "human", "hybrid"],
+            "description": "Type of moderation being implemented",
+            "required": true
+          },
+          "content_types": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Types of content being moderated",
+            "required": true
+          },
+          "implementation_scope": {
+            "type": "string",
+            "enum": ["full", "partial", "pilot"],
+            "description": "Scope of implementation",
+            "required": true
+          }
+        },
+        "metrics": {
+          "detection_rate": {
+            "type": "percentage",
+            "description": "Rate of content detection"
+          },
+          "false_positive_rate": {
+            "type": "percentage",
+            "description": "False positive rate"
+          },
+          "response_time": {
+            "type": "duration",
+            "description": "Time to moderate content"
+          },
+          "accuracy": {
+            "type": "percentage",
+            "description": "Overall moderation accuracy"
+          }
+        },
+        "risks": [
+          "Over-moderation of legitimate content",
+          "Under-moderation of harmful content",
+          "Increased moderation latency",
+          "User experience impact",
+          "Cultural/context misinterpretation"
+        ],
+        "mitigations": [
+          "Human review process",
+          "Appeal system",
+          "Regular model updates",
+          "Cultural context training",
+          "Transparent policies"
+        ]
+      },
+      "ranking_system": {
+        "name": "Ranking System Impact Assessment",
+        "fields": {
+          "ranking_component": {
+            "type": "string",
+            "description": "Component being modified",
+            "required": true
+          },
+          "change_scope": {
+            "type": "string",
+            "enum": ["global", "regional", "user-segment"],
+            "description": "Scope of ranking changes",
+            "required": true
+          },
+          "objective": {
+            "type": "string",
+            "description": "Primary objective of change",
+            "required": true
+          }
+        },
+        "metrics": {
+          "relevance_score": {
+            "type": "percentage",
+            "description": "Content relevance metric"
+          },
+          "user_satisfaction": {
+            "type": "percentage",
+            "description": "User satisfaction rate"
+          },
+          "diversity_score": {
+            "type": "percentage",
+            "description": "Content diversity metric"
+          },
+          "response_time": {
+            "type": "duration",
+            "description": "Ranking computation time"
+          }
+        },
+        "risks": [
+          "Filter bubble effects",
+          "Bias in rankings",
+          "Performance degradation",
+          "User confusion",
+          "Content provider impact"
+        ],
+        "mitigations": [
+          "Diversity controls",
+          "Bias monitoring",
+          "Performance optimization",
+          "Clear communication",
+          "Gradual rollout"
+        ]
+      }
+    },
+    "template_metadata": {
+      "version": "1.0",
+      "last_updated": "2025-01-19",
+      "supported_metric_types": [
+        "percentage",
+        "duration",
+        "epsilon",
+        "count",
+        "ratio"
+      ],
+      "required_fields": [
+        "name",
+        "fields",
+        "metrics",
+        "risks",
+        "mitigations"
+      ]
+    }
+  }

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: atf-service
+  labels:
+    app: atf-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: atf-service
+  template:
+    metadata:
+      labels:
+        app: atf-service
+    spec:
+      containers:
+      - name: atf-service
+        image: atf-service:latest
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1Gi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 30
+        env:
+        - name: ENVIRONMENT
+          value: "production"
+      imagePullSecrets:
+      - name: registry-secret

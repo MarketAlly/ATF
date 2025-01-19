@@ -1,0 +1,101 @@
+# prometheus.yml
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'atf-service'
+    static_configs:
+      - targets: ['atf-service:8000']
+    metrics_path: '/metrics'
+    scheme: http
+    relabel_configs:
+      - source_labels: [__meta_service_id]
+        target_label: service_id
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+
+rules:
+  - name: atf_alerts
+    rules:
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: High error rate detected
+          description: Error rate is above 10% for 5 minutes
+
+      - alert: SlowResponses
+        expr: http_request_duration_seconds{quantile="0.9"} > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Slow response times detected
+          description: 90th percentile of response times is above 1 second
+
+---
+# grafana/dashboards/atf-service.json
+{
+  "dashboard": {
+    "id": null,
+    "title": "ATF Service Dashboard",
+    "tags": ["atf", "service"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "title": "Request Rate",
+        "type": "graph",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        },
+        "targets": [
+          {
+            "expr": "rate(http_requests_total[5m])",
+            "legendFormat": "{{status}}"
+          }
+        ]
+      },
+      {
+        "title": "Response Times",
+        "type": "graph",
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        },
+        "targets": [
+          {
+            "expr": "rate(http_request_duration_seconds_sum[5m]) / rate(http_request_duration_seconds_count[5m])",
+            "legendFormat": "avg"
+          }
+        ]
+      },
+      {
+        "title": "Feed Generation Stats",
+        "type": "stat",
+        "gridPos": {
+          "h": 8,
+          "w": 8,
+          "x": 0,
+          "y": 8
+        },
+        "targets": [
+          {
+            "expr": "atf_feeds_generated_total",
+            "legendFormat": "Feeds Generated"
+          }
+        ]
+      }
+    ]
+  }
+}
