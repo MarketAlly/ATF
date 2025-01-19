@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="https://www.algorithmictransparency.gov/atf"
+           xmlns="https://www.algorithmictransparency.gov/atf"
+           elementFormDefault="qualified">
+
+    <!-- Root element -->
+    <xs:element name="atf">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="channel" type="ChannelType"/>
+                <xs:element name="item" type="ItemType" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="version" type="xs:string" use="required"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Channel type definition -->
+    <xs:complexType name="ChannelType">
+        <xs:sequence>
+            <xs:element name="title" type="xs:string"/>
+            <xs:element name="link" type="xs:anyURI"/>
+            <xs:element name="description" type="xs:string"/>
+            <xs:element name="lastBuildDate" type="xs:dateTime"/>
+            <xs:element name="language" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Item type definition -->
+    <xs:complexType name="ItemType">
+        <xs:sequence>
+            <xs:element name="title" type="xs:string"/>
+            <xs:element name="link" type="xs:anyURI"/>
+            <xs:element name="pubDate" type="xs:dateTime"/>
+            <xs:element name="categories" type="CategoriesType"/>
+            <xs:element name="description" type="xs:string"/>
+            <xs:element name="impactAssessment" type="ImpactAssessmentType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Categories type definition -->
+    <xs:complexType name="CategoriesType">
+        <xs:sequence>
+            <xs:element name="category" type="xs:string" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Impact Assessment type definition -->
+    <xs:complexType name="ImpactAssessmentType">
+        <xs:sequence>
+            <xs:element name="summary" type="xs:string"/>
+            <xs:element name="affectedUsers" type="xs:string"/>
+            <xs:element name="metrics" type="MetricsType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Metrics type definition -->
+    <xs:complexType name="MetricsType">
+        <xs:sequence>
+            <xs:element name="metric" type="MetricType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Metric type definition -->
+    <xs:complexType name="MetricType">
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="name" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+
+</xs:schema>
