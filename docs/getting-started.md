@@ -220,7 +220,7 @@ curl -I https://your-service/feed
 
 - Documentation: Check the `docs/` directory
 - Issues: Submit via GitHub
-- Security: Contact security@yourdomain.com
+- Security: Contact security@marketally.com
 - Community: Join our Slack channel
 
 ## Next Steps
