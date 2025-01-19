@@ -262,7 +262,6 @@ git push origin v1.0.0
 
 ## Questions?
 
-- Join our Slack channel
 - Check existing issues
 - Read the documentation
 - Contact maintainers
