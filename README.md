@@ -182,5 +182,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - Documentation: See the `docs/` directory
 - Issues: Submit via GitHub
-- Security: Contact security@yourdomain.com
-- Community: Join our Slack channel
+- Security: Contact security@marketally.com
